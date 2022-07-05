@@ -12,7 +12,8 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 
   _load(event, emit) async {
-    if (state.status == NewsStatus.loading) {
+    if (state.status == NewsStatus.initial) {
+      emit(const NewsState(status: NewsStatus.loading, news: []));
       List<News>? newsList = await newsApi.getNews("10");
       if (newsList != null) {
         emit(NewsState(news: newsList, status: NewsStatus.success));
