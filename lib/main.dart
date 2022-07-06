@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/Bloc/news_bloc.dart';
 import 'package:news_app/Bloc/news_event.dart';
 import 'package:news_app/Bloc/news_state.dart';
 import 'package:news_app/api/news_api.dart';
+
+import 'api/news_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -62,16 +65,22 @@ class NewsApp extends StatelessWidget {
       ),
       body: BlocBuilder<NewsBloc, NewsState>(
         builder: (context, state) {
-          if (state.status == NewsStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
+          // print(state.status);
+          if (state.status == NewsStatus.success) {
+            print(state.status);
+            return NewsList(
+              newsList: state.news!,
             );
           }
-          if (state.status == NewsStatus.success) {
-            return const NewsList();
+          if (state.status == NewsStatus.failed) {
+            print(state.status);
+            return Center(
+              child: Text(state.failure!.message),
+            );
           }
+          print(state.status);
           return const Center(
-            child: Text("an error occured"),
+            child: CircularProgressIndicator.adaptive(),
           );
         },
       ),
@@ -80,25 +89,41 @@ class NewsApp extends StatelessWidget {
 }
 
 class NewsList extends StatelessWidget {
-  const NewsList({Key? key}) : super(key: key);
+  final List<News> newsList;
+  const NewsList({Key? key, required this.newsList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      children: const [
-        NewsPost(),
-        SizedBox(
-          height: 20,
-        ),
-        NewsPost(),
-      ],
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      itemBuilder: (context, index) {
+        return NewsPost(
+          author: newsList[index].author,
+          description: newsList[index].description,
+          imageUrl: newsList[index].imageUrl,
+          title: newsList[index].title,
+        );
+      },
+      itemCount: newsList.length,
+      separatorBuilder: (context, index) => const SizedBox(
+        height: 15,
+      ),
     );
   }
 }
 
 class NewsPost extends StatelessWidget {
-  const NewsPost({Key? key}) : super(key: key);
+  final String imageUrl;
+  final String title;
+  final String author;
+  final String description;
+  const NewsPost({
+    Key? key,
+    required this.author,
+    required this.description,
+    required this.imageUrl,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,15 +146,38 @@ class NewsPost extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            height: 200,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              color: Colors.deepOrange,
-            ),
+          CachedNetworkImage(
+            errorWidget: (context, url, error) {
+              return const Center(
+                child: Text("Image failed loading"),
+              );
+            },
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) {
+              return Container(
+                height: 210,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    filterQuality: FilterQuality.high,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+            // fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,
+            placeholder: (context, url) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            },
+            fadeInDuration: const Duration(seconds: 1),
+            alignment: Alignment.center,
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -137,10 +185,10 @@ class NewsPost extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
-              children: const [
+              children: [
                 Text(
-                  "The least imaginative holiday gift everyone will bw getting is a christmas toy",
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -148,27 +196,28 @@ class NewsPost extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  "These is the following news from the ofice of the chairman of asuu , saying the strike will be called of oon, that student hould be patience",
-                  style: TextStyle(
+                  description,
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 17,
                     overflow: TextOverflow.ellipsis,
                   ),
                   maxLines: 2,
                 ),
-                SizedBox(
-                  height: 2,
+                const SizedBox(
+                  height: 5,
                 ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    "Chinedu",
-                    style: TextStyle(
+                    "~$author",
+                    style: const TextStyle(
                       fontSize: 15,
+                      overflow: TextOverflow.ellipsis,
                       color: Colors.grey,
                     ),
                   ),

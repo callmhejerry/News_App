@@ -1,8 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/Bloc/news_event.dart';
 import 'package:news_app/Bloc/news_state.dart';
 import 'package:news_app/api/news_api.dart';
 
+import '../api/failure.dart';
 import '../api/news_model.dart';
 
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
@@ -14,20 +16,22 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   _load(event, emit) async {
     if (state.status == NewsStatus.initial) {
       emit(const NewsState(status: NewsStatus.loading, news: []));
-      List<News>? newsList = await newsApi.getNews("10");
-      if (newsList != null) {
+      Either<List<News>, Failure> newsList = await newsApi.getNews("15");
+      newsList.fold((newsList) {
         emit(NewsState(news: newsList, status: NewsStatus.success));
-      } else {
-        emit(const NewsState(news: null, status: NewsStatus.failed));
-      }
+      }, (failure) {
+        emit(NewsState(news: [], status: NewsStatus.failed, failure: failure));
+      });
     } else {
-      List<News>? newsList = await newsApi.getNews("15");
-      if (newsList != null) {
+      Either<List<News>, Failure> newsList = await newsApi.getNews("15");
+      newsList.fold((newsList) {
         emit(NewsState.copyWith(
           status: NewsStatus.success,
           news: List.of(state.news!)..addAll(newsList),
         ));
-      }
+      }, (failure) {
+        emit(NewsState(news: [], status: NewsStatus.failed, failure: failure));
+      });
     }
   }
 }

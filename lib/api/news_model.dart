@@ -15,16 +15,16 @@ class News {
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-      author: json["author"] as String,
-      content: json["content"] as String,
-      description: json["description"] as String,
-      imageUrl: json["urlToImage"] as String,
-      title: json["title"] as String,
+      author: json["author"] ?? "",
+      content: json["content"] ?? "",
+      description: json["description"] ?? "",
+      imageUrl: json["urlToImage"] ?? "",
+      title: json["title"] ?? "",
     );
   }
 
   static List<News> newsList(dynamic jsonList) {
-    List articles = jsonList["article"] as List;
+    List articles = jsonList["articles"] as List;
     List<News> newsList =
         List.from(articles.map((newsItem) => News.fromJson(newsItem)));
     return newsList;
