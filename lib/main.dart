@@ -172,8 +172,12 @@ class NewsPost extends StatelessWidget {
             // fit: BoxFit.cover,
             filterQuality: FilterQuality.high,
             placeholder: (context, url) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
+              return const SizedBox(
+                height: 200,
+                width: double.maxFinite,
+                child: Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
               );
             },
             fadeInDuration: const Duration(seconds: 1),
