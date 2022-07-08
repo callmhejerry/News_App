@@ -1,13 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:news_app/Bloc/news_bloc.dart';
 import 'package:news_app/Bloc/news_event.dart';
 import 'package:news_app/Bloc/news_state.dart';
 import 'package:news_app/Domain/enities.dart';
 import 'package:news_app/api/news_api.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final document = await getApplicationDocumentsDirectory();
+  Hive.init(document.path);
+  Hive.registerAdapter(NewsEntityAdapter());
   runApp(const MyApp());
 }
 
