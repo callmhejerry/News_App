@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/Bloc/news_bloc.dart';
 import 'package:news_app/Bloc/news_event.dart';
 import 'package:news_app/Bloc/news_state.dart';
+import 'package:news_app/Domain/enities.dart';
 import 'package:news_app/api/news_api.dart';
-
-import 'api/news_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,18 +66,15 @@ class NewsApp extends StatelessWidget {
         builder: (context, state) {
           // print(state.status);
           if (state.status == NewsStatus.success) {
-            print(state.status);
             return NewsList(
               newsList: state.news!,
             );
           }
           if (state.status == NewsStatus.failed) {
-            print(state.status);
             return Center(
               child: Text(state.failure!.message),
             );
           }
-          print(state.status);
           return const Center(
             child: CircularProgressIndicator.adaptive(),
           );
@@ -89,7 +85,7 @@ class NewsApp extends StatelessWidget {
 }
 
 class NewsList extends StatelessWidget {
-  final List<News> newsList;
+  final List<NewsEntity> newsList;
   const NewsList({Key? key, required this.newsList}) : super(key: key);
 
   @override

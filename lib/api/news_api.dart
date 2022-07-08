@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:news_app/Domain/enities.dart';
 import 'package:news_app/api/failure.dart';
 
 import 'news_model.dart';
@@ -15,13 +16,14 @@ class NewsApi {
   //   connectTimeout: 5000,
   //   receiveTimeout: 5000,
   // );
-  Future<Either<List<News>, Failure>> getBitCoinNews(String pageSize) async {
+  Future<Either<List<NewsEntity>, Failure>> getBitCoinNews(
+      String pageSize) async {
     try {
       Response res = await client.get(
           "https://newsapi.org/v2/everything?q=bitcoin&pageSize=$pageSize&apiKey=261a68fc65d14243bb91c8d62dc1f557");
 
       if (res.statusCode == 200) {
-        List<News> newsList = News.newsList(res.data);
+        List<NewsEntity> newsList = News.newsList(res.data);
         return Left(newsList);
       }
       return const Right(Failure(message: "Unknown error"));

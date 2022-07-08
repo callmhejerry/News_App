@@ -1,4 +1,4 @@
-import 'package:news_app/api/news_model.dart';
+import 'package:news_app/Domain/enities.dart';
 
 import '../api/failure.dart';
 
@@ -10,13 +10,14 @@ enum NewsStatus {
 }
 
 class NewsState {
-  final List<News>? news;
+  final List<NewsEntity>? news;
   final NewsStatus status;
   final Failure? failure;
 
   const NewsState({this.news, this.status = NewsStatus.initial, this.failure});
 
-  static NewsState copyWith({List<News>? news, required NewsStatus status}) {
+  static NewsState copyWith(
+      {List<NewsEntity>? news, required NewsStatus status}) {
     return NewsState(
       news: news ?? news,
       status: status,

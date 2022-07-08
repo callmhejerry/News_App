@@ -1,3 +1,5 @@
+import 'package:news_app/Domain/enities.dart';
+
 class News {
   final String author;
   final String title;
@@ -23,10 +25,22 @@ class News {
     );
   }
 
-  static List<News> newsList(dynamic jsonList) {
+  static List<NewsEntity> newsList(dynamic jsonList) {
     List articles = jsonList["articles"] as List;
-    List<News> newsList =
-        List.from(articles.map((newsItem) => News.fromJson(newsItem)));
+    List<NewsEntity> newsList = List.from(
+        articles.map((newsItem) => News.fromJson(newsItem).toNewsEntity()));
     return newsList;
+  }
+}
+
+extension NewsX on News {
+  NewsEntity toNewsEntity() {
+    return NewsEntity(
+      author: author,
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      content: content,
+    );
   }
 }

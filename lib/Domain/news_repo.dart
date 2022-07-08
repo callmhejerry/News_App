@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:news_app/Domain/enities.dart';
 
 import '../api/failure.dart';
-import '../api/news_model.dart';
 
 abstract class INewsRepo {
-  Future<Either<List<News>, Failure>> getBitCoinNews(String newsCount);
+  Future<Either<List<NewsEntity>, Failure>> getBitCoinNews(String newsCount);
 }
