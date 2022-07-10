@@ -1,6 +1,6 @@
 import 'package:news_app/Domain/enities.dart';
 
-import '../api/failure.dart';
+import '../../utils/failure.dart';
 
 enum NewsStatus {
   initial,

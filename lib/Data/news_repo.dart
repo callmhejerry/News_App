@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:news_app/Data/DataSources/local_data_source.dart';
 import 'package:news_app/Data/DataSources/remote_datas_source.dart';
 import 'package:news_app/Domain/enities.dart';
-import 'package:news_app/internet_checker.dart';
+import 'package:news_app/utils/internet_checker.dart';
 
 import '../Domain/news_repo.dart';
-import '../api/failure.dart';
+import '../utils/failure.dart';
 
 class NewsRepo implements INewsRepo {
   final RemoteDataSouce newsRemoteDataSource;
@@ -20,25 +22,27 @@ class NewsRepo implements INewsRepo {
   @override
   Future<Either<List<NewsEntity>, Failure>> getBitCoinNews(newsCount) async {
     //USE THE ISCONNECTED TO DECIDE WHETHER TO RETURN FROM DATASOURCE OR NOT
-    if (internetConnection.isConnected) {
+    if (await internetConnection.isConnected()) {
+      debugPrint(internetConnection.isConnected().toString());
       try {
-        List<NewsEntity> newsList =
-            await newsRemoteDataSource.getBitCoinNews(newsCount);
+        final result = await newsRemoteDataSource.getBitCoinNews(newsCount);
         await newsLocalDataSource.storeNews(
-            boxName: "bitcoin", newsList: newsList);
-        return Left(newsList);
-      } catch (e) {
-        final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
-        if (result == null) {
-          return const Right(
-              Failure(message: "You dont have an internet connection"));
+            newsList: result, boxName: "bitcoin");
+        return Left(result);
+      } on DioError catch (e) {
+        if (e.type == DioErrorType.connectTimeout) {
+          return const Right(Failure(message: "Please check your connection"));
         } else {
-          return Left(result);
+          return const Right(Failure(message: "server Error"));
         }
       }
     } else {
       final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
-      return Left(result!);
+      if (result == null) {
+        return const Right(Failure(message: "No internet connection"));
+      } else {
+        return Left(result);
+      }
     }
   }
 }
