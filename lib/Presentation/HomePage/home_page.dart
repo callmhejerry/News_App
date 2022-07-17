@@ -130,24 +130,42 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-      body: BlocBuilder<NewsBloc, NewsState>(
-        builder: (context, state) {
-          // print(state.status);
-          if (state.status == NewsStatus.success) {
-            return NewsList(
-              newsList: state.news!,
-            );
-          }
-          if (state.status == NewsStatus.failed) {
-            return Center(
-              child: Text(state.failure!.message),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
-        },
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          PoliticsPage(),
+          Sport(),
+          BitCoinPage(),
+          Entertainment(),
+          Finance(),
+        ],
       ),
+    );
+  }
+}
+
+class BitCoinPage extends StatelessWidget {
+  const BitCoinPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NewsBloc, NewsState>(
+      builder: (context, state) {
+        // print(state.status);
+        if (state.status == NewsStatus.success) {
+          return NewsList(
+            newsList: state.news!,
+          );
+        }
+        if (state.status == NewsStatus.failed) {
+          return Center(
+            child: Text(state.failure!.message),
+          );
+        }
+        return const Center(
+          child: CircularProgressIndicator.adaptive(),
+        );
+      },
     );
   }
 }
@@ -295,5 +313,41 @@ class NewsPost extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class PoliticsPage extends StatelessWidget {
+  const PoliticsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class Sport extends StatelessWidget {
+  const Sport({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class Entertainment extends StatelessWidget {
+  const Entertainment({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class Finance extends StatelessWidget {
+  const Finance({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
