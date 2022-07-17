@@ -21,16 +21,22 @@ class NewsRepo implements INewsRepo {
   });
   @override
   Future<Either<List<NewsEntity>, Failure>> getBitCoinNews(newsCount) async {
+    bool isConnected = await internetConnection.isConnected();
     //USE THE ISCONNECTED TO DECIDE WHETHER TO RETURN FROM DATASOURCE OR NOT
-    if (await internetConnection.isConnected()) {
-      debugPrint(internetConnection.isConnected().toString());
+    if (isConnected) {
+      debugPrint(isConnected.toString());
       try {
         final result = await newsRemoteDataSource.getBitCoinNews(newsCount);
         await newsLocalDataSource.storeNews(
             newsList: result, boxName: "bitcoin");
         return Left(result);
       } on DioError catch (e) {
+        final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
+        if (result != null) {
+          return Left(result);
+        }
         if (e.type == DioErrorType.connectTimeout) {
+          debugPrint("From remote source");
           return const Right(Failure(message: "Please check your connection"));
         } else {
           return const Right(Failure(message: "server Error"));

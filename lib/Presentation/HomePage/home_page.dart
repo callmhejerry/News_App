@@ -6,8 +6,57 @@ import '../../Domain/enities.dart';
 import 'news_bloc.dart';
 import 'news_state.dart';
 
-class NewsApp extends StatelessWidget {
+class NewsApp extends StatefulWidget {
   const NewsApp({Key? key}) : super(key: key);
+
+  @override
+  State<NewsApp> createState() => _NewsAppState();
+}
+
+class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
+  final List<Widget> _tabs = [
+    const Text(
+      "Politics",
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+    const Text(
+      "Sport",
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+    const Text(
+      "Bitcoin",
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+    const Text(
+      "Entertainment",
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+    const Text(
+      "Finance",
+      style: TextStyle(
+        color: Colors.black,
+      ),
+    ),
+  ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _tabs.length,
+      initialIndex: 0,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 50),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +64,45 @@ class NewsApp extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        actions: const [
+          Icon(
+            Icons.search,
+            color: Colors.black,
+            size: 25,
+          ),
+          SizedBox(
+            width: 25,
+          ),
+          Icon(
+            Icons.notifications_none_rounded,
+            color: Colors.black,
+            size: 25,
+          ),
+          SizedBox(
+            width: 20,
+          ),
+        ],
+        bottom: TabBar(
+          tabs: _tabs,
+          controller: _tabController,
+          isScrollable: true,
+          labelColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          indicatorColor: Colors.black,
+          labelPadding: const EdgeInsets.symmetric(
+            vertical: 10,
+            horizontal: 15,
+          ),
+          unselectedLabelColor: Colors.grey,
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.normal,
+          ),
+          labelStyle: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
         title: const Text(
           "News",
           style: TextStyle(
@@ -145,7 +233,6 @@ class NewsPost extends StatelessWidget {
                 ),
               );
             },
-            // fit: BoxFit.cover,
             filterQuality: FilterQuality.high,
             placeholder: (context, url) {
               return const SizedBox(
