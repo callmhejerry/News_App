@@ -15,6 +15,7 @@ class NewsApp extends StatefulWidget {
 
 class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  int currentIndex = 0;
   final List<Widget> _tabs = [
     const Text(
       "Politics",
@@ -54,7 +55,7 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
       length: _tabs.length,
       initialIndex: 0,
       vsync: this,
-      animationDuration: const Duration(milliseconds: 50),
+      animationDuration: const Duration(milliseconds: 500),
     );
   }
 
@@ -63,7 +64,7 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 2,
         actions: const [
           Icon(
             Icons.search,
@@ -88,7 +89,9 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
           isScrollable: true,
           labelColor: Colors.black,
           indicatorSize: TabBarIndicatorSize.label,
+          automaticIndicatorColorAdjustment: true,
           indicatorColor: Colors.black,
+          indicatorWeight: 5,
           labelPadding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 15,
@@ -113,20 +116,47 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        iconSize: 25,
+        showUnselectedLabels: false,
+        currentIndex: currentIndex,
+        onTap: (int selected) {
+          setState(() {
+            currentIndex = selected;
+          });
+        },
+        elevation: 1,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
               color: Colors.black,
             ),
-            label: "Home",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.book,
+              color: Colors.black,
+            ),
+            label: "",
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.bookmark,
               color: Colors.black,
             ),
-            label: "Saved",
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+              color: Colors.black,
+            ),
+            label: "",
           ),
         ],
       ),
