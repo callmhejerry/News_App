@@ -17,7 +17,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     if (state.status == NewsStatus.initial) {
       emit(const NewsState(status: NewsStatus.loading, news: []));
       Either<List<NewsEntity>, Failure> newsList =
-          await newsRepo.getBitCoinNews("15");
+          await newsRepo.getAllNews("15");
       newsList.fold((newsList) {
         emit(NewsState(news: newsList, status: NewsStatus.success));
       }, (failure) {
@@ -25,7 +25,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
       });
     } else {
       Either<List<NewsEntity>, Failure> newsList =
-          await newsRepo.getBitCoinNews("15");
+          await newsRepo.getAllNews("15");
       newsList.fold((newsList) {
         emit(
           NewsState.copyWith(

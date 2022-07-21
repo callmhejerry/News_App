@@ -20,13 +20,13 @@ class NewsRepo implements INewsRepo {
     required this.internetConnection,
   });
   @override
-  Future<Either<List<NewsEntity>, Failure>> getBitCoinNews(newsCount) async {
+  Future<Either<List<NewsEntity>, Failure>> getAllNews(newsCount) async {
     bool isConnected = await internetConnection.isConnected();
     //USE THE ISCONNECTED TO DECIDE WHETHER TO RETURN FROM DATASOURCE OR NOT
     if (isConnected) {
       debugPrint(isConnected.toString());
       try {
-        final result = await newsRemoteDataSource.getBitCoinNews(newsCount);
+        final result = await newsRemoteDataSource.getAllNews(newsCount);
         await newsLocalDataSource.storeNews(
             newsList: result, boxName: "bitcoin");
         return Left(result);
@@ -50,5 +50,11 @@ class NewsRepo implements INewsRepo {
         return Left(result);
       }
     }
+  }
+
+  @override
+  Future getHeadlineNews() {
+    // TODO: implement getHeadlineNews
+    throw UnimplementedError();
   }
 }

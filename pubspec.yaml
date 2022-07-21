@@ -40,6 +40,7 @@ dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.3
   cached_network_image: ^3.2.1
+  get_it: ^7.2.0
   connectivity_plus: ^2.3.5
   path_provider: ^2.0.11
 
