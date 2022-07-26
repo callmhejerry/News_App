@@ -3,7 +3,11 @@ import 'package:news_app/Domain/enities.dart';
 
 import '../news_model.dart';
 
-class RemoteDataSouce extends ApiClient {
+class RemoteDataSouce {
+  RemoteDataSouce({
+    required this.remoteHeadlineNews,
+    required this.remoteAllNews,
+  });
   late IRemoteHeadlineNews remoteHeadlineNews;
   late IRemoteAllNews remoteAllNews;
   Future<List<NewsEntity>> getAllNews(String pageSize) async {
@@ -37,6 +41,11 @@ class AllBitCoinNews extends ApiClient implements IRemoteAllNews {
       return throw DioError(requestOptions: res.requestOptions, response: res);
     }
   }
+}
+
+class AllBitCoinHeadlines implements IRemoteHeadlineNews {
+  @override
+  getHeadlineNews() {}
 }
 
 class ApiClient {

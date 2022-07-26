@@ -24,14 +24,23 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NewsBloc>(
-      create: (context) => NewsBloc(
-        newsRepo: NewsRepo(
-          newsRemoteDataSource: RemoteDataSouce(),
-          newsLocalDataSource: LocalDataSource(),
-          internetConnection: InternetConnection(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: ((context) {
+            return NewsBloc<BitCoinPage>(
+              newsRepo: NewsRepo(
+                newsRemoteDataSource: RemoteDataSouce(
+                  remoteAllNews: AllBitCoinNews(),
+                  remoteHeadlineNews: AllBitCoinHeadlines(),
+                ),
+                newsLocalDataSource: LocalDataSource(),
+                internetConnection: InternetConnection(),
+              ),
+            )..add(LoadNewsEvent());
+          }),
         ),
-      )..add(LoadNewsEvent()),
+      ],
       child: const MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

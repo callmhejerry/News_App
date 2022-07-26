@@ -53,8 +53,5 @@ class NewsRepo implements INewsRepo {
   }
 
   @override
-  Future getHeadlineNews() {
-    // TODO: implement getHeadlineNews
-    throw UnimplementedError();
-  }
+  getHeadlineNews() {}
 }

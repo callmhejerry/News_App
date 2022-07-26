@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/Presentation/HomePage/news_event.dart';
 
 import '../../Domain/enities.dart';
 import 'news_bloc.dart';
@@ -115,51 +116,6 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.black,
-        iconSize: 25,
-        showUnselectedLabels: false,
-        currentIndex: currentIndex,
-        onTap: (int selected) {
-          setState(() {
-            currentIndex = selected;
-          });
-        },
-        elevation: 1,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.book,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.bookmark,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
-            label: "",
-          ),
-        ],
-      ),
       body: TabBarView(
         controller: _tabController,
         children: const [
@@ -174,12 +130,17 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
   }
 }
 
-class BitCoinPage extends StatelessWidget {
+class BitCoinPage extends StatefulWidget {
   const BitCoinPage({Key? key}) : super(key: key);
 
   @override
+  State<BitCoinPage> createState() => _BitCoinPageState();
+}
+
+class _BitCoinPageState extends State<BitCoinPage> {
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsBloc, NewsState>(
+    return BlocBuilder<NewsBloc<BitCoinPage>, NewsState>(
       builder: (context, state) {
         // print(state.status);
         if (state.status == NewsStatus.success) {
@@ -188,8 +149,17 @@ class BitCoinPage extends StatelessWidget {
           );
         }
         if (state.status == NewsStatus.failed) {
-          return Center(
-            child: Text(state.failure!.message),
+          return Column(
+            children: [
+              Text(state.failure!.message),
+              ElevatedButton(
+                onPressed: () {
+                  NewsBloc bloc = context.read<NewsBloc<BitCoinPage>>();
+                  bloc.add(LoadNewsEvent());
+                },
+                child: const Text("Try again"),
+              ),
+            ],
           );
         }
         return const Center(
@@ -200,25 +170,46 @@ class BitCoinPage extends StatelessWidget {
   }
 }
 
-class NewsList extends StatelessWidget {
+class NewsList extends StatefulWidget {
   final List<NewsEntity> newsList;
   const NewsList({Key? key, required this.newsList}) : super(key: key);
 
   @override
+  State<NewsList> createState() => _NewsListState();
+}
+
+class _NewsListState extends State<NewsList> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemBuilder: (context, index) {
-        return NewsPost(
-          author: newsList[index].author,
-          description: newsList[index].description,
-          imageUrl: newsList[index].imageUrl,
-          title: newsList[index].title,
-        );
+    return RefreshIndicator(
+      color: Colors.black,
+      onRefresh: () {
+        NewsBloc<BitCoinPage> bloc = context.read<NewsBloc<BitCoinPage>>();
+
+        return Future.sync(() {
+          bloc.add(ReloadNewsEvent());
+        });
       },
-      itemCount: newsList.length,
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 15,
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        itemBuilder: (context, index) {
+          return NewsPost(
+            author: widget.newsList[index].author,
+            description: widget.newsList[index].description,
+            imageUrl: widget.newsList[index].imageUrl,
+            title: widget.newsList[index].title,
+          );
+        },
+        itemCount: widget.newsList.length,
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 15,
+        ),
       ),
     );
   }

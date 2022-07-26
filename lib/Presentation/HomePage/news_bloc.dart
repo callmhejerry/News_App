@@ -7,10 +7,17 @@ import '../../utils/failure.dart';
 import 'news_event.dart';
 import 'news_state.dart';
 
-class NewsBloc extends Bloc<NewsEvent, NewsState> {
+class NewsBloc<T> extends Bloc<NewsEvent, NewsState> {
   NewsRepo newsRepo;
+  late bool loaded;
   NewsBloc({required this.newsRepo}) : super(const NewsState(news: null)) {
     on<LoadNewsEvent>(_load);
+    on<ReloadNewsEvent>(
+      (event, emit) {
+        emit(const NewsState(status: NewsStatus.initial));
+        add(LoadNewsEvent());
+      },
+    );
   }
 
   _load(event, emit) async {
@@ -20,6 +27,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           await newsRepo.getAllNews("15");
       newsList.fold((newsList) {
         emit(NewsState(news: newsList, status: NewsStatus.success));
+        loaded = true;
       }, (failure) {
         emit(NewsState(news: [], status: NewsStatus.failed, failure: failure));
       });
