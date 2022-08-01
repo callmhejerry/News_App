@@ -5,12 +5,15 @@ import 'package:news_app/Data/DataSources/local_data_source.dart';
 import 'package:news_app/Data/DataSources/remote_datas_source.dart';
 import 'package:news_app/Data/news_repo.dart';
 import 'package:news_app/Domain/enities.dart';
-import 'package:news_app/Presentation/HomePage/news_bloc.dart';
+import 'package:news_app/logic/internet_bloc/internet_bloc.dart';
+
 import 'package:news_app/utils/internet_checker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'Presentation/HomePage/home_page.dart';
-import 'Presentation/HomePage/news_event.dart';
+
+import 'logic/news_bloc.dart/news_bloc.dart';
+import 'logic/news_bloc.dart/news_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +42,11 @@ class MyApp extends StatelessWidget {
               ),
             )..add(LoadNewsEvent());
           }),
+        ),
+        BlocProvider(
+          create: (context) => InternetBloc(
+            internetConnection: InternetConnection(),
+          ),
         ),
       ],
       child: const MaterialApp(

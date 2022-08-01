@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app/Presentation/HomePage/news_event.dart';
+import 'package:news_app/logic/internet_bloc/internet_bloc.dart';
+import 'package:news_app/logic/internet_bloc/internet_state.dart';
 
 import '../../Domain/enities.dart';
-import 'news_bloc.dart';
-import 'news_state.dart';
+import '../../logic/news_bloc.dart/news_bloc.dart';
+import '../../logic/news_bloc.dart/news_event.dart';
+import '../../logic/news_bloc.dart/news_state.dart';
 
 class NewsApp extends StatefulWidget {
   const NewsApp({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class NewsApp extends StatefulWidget {
 
 class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int currentIndex = 0;
   final List<Widget> _tabs = [
     const Text(
@@ -116,15 +119,39 @@ class _NewsAppState extends State<NewsApp> with SingleTickerProviderStateMixin {
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [
-          PoliticsPage(),
-          Sport(),
-          BitCoinPage(),
-          Entertainment(),
-          Finance(),
-        ],
+      body: BlocListener<InternetBloc, InternetState>(
+        listener: (context, state) {
+          if (state.status == InternetStatus.disconnected) {
+            // _scaffoldKey.currentState!.showSnackBar(
+            //   const SnackBar(
+            //     content: Text(
+            //       "You're not connected , please check your connection",
+            //     ),
+            //   ),
+            // );
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "You are not connected, please check ypur connection",
+                ),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        },
+        child: TabBarView(
+          controller: _tabController,
+          children: const [
+            PoliticsPage(),
+            Sport(),
+            BitCoinPage(),
+            Entertainment(),
+            Finance(),
+          ],
+        ),
       ),
     );
   }
@@ -182,7 +209,14 @@ class _NewsListState extends State<NewsList> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+
+    // _scrollController.addListener(() {
+    //   print(_scrollController.position.maxScrollExtent);
+    // });
   }
+
+  late ScrollController _scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -190,13 +224,14 @@ class _NewsListState extends State<NewsList> {
       color: Colors.black,
       onRefresh: () {
         NewsBloc<BitCoinPage> bloc = context.read<NewsBloc<BitCoinPage>>();
-
+        // print(_scrollController.position.pixels);
         return Future.sync(() {
           bloc.add(ReloadNewsEvent());
         });
       },
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),
+        controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         itemBuilder: (context, index) {
           return NewsPost(
