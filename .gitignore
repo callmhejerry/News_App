@@ -31,7 +31,11 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/android/
+android/
+ios/
+linux/
+windows/
+macos/
 
 # Web related
 lib/generated_plugin_registrant.dart

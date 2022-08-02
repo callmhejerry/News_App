@@ -44,3 +44,40 @@ extension NewsX on News {
     );
   }
 }
+
+class HeadlineNewsModel {
+  final String title;
+  final String description;
+  final String urlToImage;
+  final String content;
+
+  const HeadlineNewsModel({
+    required this.content,
+    required this.description,
+    required this.title,
+    required this.urlToImage,
+  });
+
+  HeadlineNewsModel.fromJson(Map<String, dynamic> json)
+      : title = json["title"],
+        description = json["description"],
+        urlToImage = json["urlToImage"],
+        content = json["content"];
+
+  List<HeadlineNewsModel> fromList(List json) {
+    List<HeadlineNewsModel> headlineNewsList =
+        json.map((item) => HeadlineNewsModel.fromJson(item)).toList();
+    return headlineNewsList;
+  }
+}
+
+extension HeadlineX on HeadlineNewsModel {
+  HeadLineEntity toHeadlineEntity() {
+    return HeadLineEntity(
+      content: content,
+      description: description,
+      title: title,
+      urlToImage: urlToImage,
+    );
+  }
+}

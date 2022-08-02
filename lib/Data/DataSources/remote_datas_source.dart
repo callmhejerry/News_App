@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:news_app/Domain/enities.dart';
 
-import '../news_model.dart';
-
 class RemoteDataSouce {
   RemoteDataSouce({
     required this.remoteHeadlineNews,
@@ -10,42 +8,26 @@ class RemoteDataSouce {
   });
   late IRemoteHeadlineNews remoteHeadlineNews;
   late IRemoteAllNews remoteAllNews;
-  Future<List<NewsEntity>> getAllNews(String pageSize) async {
+  Future<List<NewsEntity>> getAllNews(int pageSize) async {
     return remoteAllNews.getAllNews(pageSize);
+  }
+
+  getHeadlineNews(int page) {
+    return remoteHeadlineNews.getHeadlineNews(page);
   }
 }
 
 abstract class IRemoteHeadlineNews {
-  getHeadlineNews();
+  getHeadlineNews(int page);
 }
 
 abstract class IRemoteAllNews {
-  Future<List<NewsEntity>> getAllNews(String pageSize);
-}
-
-class AllBitCoinNews extends ApiClient implements IRemoteAllNews {
-  @override
-  Future<List<NewsEntity>> getAllNews(String pageSize) async {
-    Response res = await dio.get(
-      "/everything",
-      queryParameters: {
-        "q": "bitcoin",
-        "pageSize": pageSize,
-      },
-    );
-
-    if (res.statusCode == 200) {
-      List<NewsEntity> newsList = News.newsList(res.data);
-      return newsList;
-    } else {
-      return throw DioError(requestOptions: res.requestOptions, response: res);
-    }
-  }
+  Future<List<NewsEntity>> getAllNews(int page);
 }
 
 class AllBitCoinHeadlines implements IRemoteHeadlineNews {
   @override
-  getHeadlineNews() {}
+  getHeadlineNews(int page) {}
 }
 
 class ApiClient {
@@ -61,22 +43,22 @@ class ApiClient {
   );
 }
 
-abstract class IApiClient {
-  static const String apiKey = "261a68fc65d14243bb91c8d62dc1f557";
-  Dio dio();
-}
+// abstract class IApiClient {
+//   static const String apiKey = "261a68fc65d14243bb91c8d62dc1f557";
+//   Dio dio();
+// }
 
-class AllApiClient implements IApiClient {
-  @override
-  dio() {
-    return Dio(
-      BaseOptions(
-        connectTimeout: 10000,
-        baseUrl: "https://newsapi.org/v2",
-        queryParameters: {
-          "apiKey": IApiClient.apiKey,
-        },
-      ),
-    );
-  }
-}
+// class AllApiClient implements IApiClient {
+//   @override
+//   dio() {
+//     return Dio(
+//       BaseOptions(
+//         connectTimeout: 10000,
+//         baseUrl: "https://newsapi.org/v2",
+//         queryParameters: {
+//           "apiKey": IApiClient.apiKey,
+//         },
+//       ),
+//     );
+//   }
+// }

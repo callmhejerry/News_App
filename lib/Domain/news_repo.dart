@@ -4,6 +4,6 @@ import 'package:news_app/Domain/enities.dart';
 import '../utils/failure.dart';
 
 abstract class INewsRepo {
-  Future<Either<List<NewsEntity>, Failure>> getAllNews(String newsCount);
+  Future<Either<List<NewsEntity>, Failure>> getAllNews(int newsCount);
   getHeadlineNews();
 }

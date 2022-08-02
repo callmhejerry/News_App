@@ -23,3 +23,22 @@ class NewsEntity {
     required this.content,
   });
 }
+
+@HiveType(typeId: 2)
+class HeadLineEntity {
+  @HiveField(1)
+  final String title;
+  @HiveField(2)
+  final String description;
+  @HiveField(3)
+  final String urlToImage;
+  @HiveField(4)
+  final String content;
+
+  HeadLineEntity({
+    required this.content,
+    required this.description,
+    required this.title,
+    required this.urlToImage,
+  });
+}

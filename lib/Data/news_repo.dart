@@ -28,7 +28,9 @@ class NewsRepo implements INewsRepo {
       try {
         final result = await newsRemoteDataSource.getAllNews(newsCount);
         await newsLocalDataSource.storeNews(
-            newsList: result, boxName: "bitcoin");
+          newsList: result,
+          boxName: "bitcoin",
+        );
         return Left(result);
       } on DioError catch (e) {
         final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
