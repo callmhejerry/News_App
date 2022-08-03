@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import '../../../Domain/enities.dart';
-import '../../news_model.dart';
-import '../remote_datas_source.dart';
+import '../../../../Domain/enities.dart';
+import '../../../news_model.dart';
+import '../../remote_datas_source.dart';
 
 class AllBusinessNews extends ApiClient implements IRemoteAllNews {
   @override

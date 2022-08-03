@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
 
-import '../../../Domain/enities.dart';
-import '../../news_model.dart';
-import '../remote_datas_source.dart';
+import '../../../../Domain/enities.dart';
+import '../../../news_model.dart';
+import '../../remote_datas_source.dart';
 
-class AllEntertainmentNews extends ApiClient implements IRemoteAllNews {
+class AllPoliticsNews extends ApiClient implements IRemoteAllNews {
   @override
   Future<List<NewsEntity>> getAllNews(int page) async {
     Response res = await dio.get(
       "/everything",
       queryParameters: {
-        "q": "entertainment",
+        "q": "politics",
         "pageSize": 10,
         "page": page,
       },

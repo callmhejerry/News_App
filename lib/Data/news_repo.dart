@@ -11,7 +11,7 @@ import '../utils/failure.dart';
 
 class NewsRepo implements INewsRepo {
   final RemoteDataSouce newsRemoteDataSource;
-  final LocalDataSource newsLocalDataSource;
+  final ILocalDataSource newsLocalDataSource;
   final InternetConnection internetConnection;
 
   const NewsRepo({
@@ -27,13 +27,12 @@ class NewsRepo implements INewsRepo {
       debugPrint(isConnected.toString());
       try {
         final result = await newsRemoteDataSource.getAllNews(newsCount);
-        await newsLocalDataSource.storeNews(
+        await newsLocalDataSource.storeAllNews(
           newsList: result,
-          boxName: "bitcoin",
         );
         return Left(result);
       } on DioError catch (e) {
-        final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
+        final result = await newsLocalDataSource.getAllNews();
         if (result != null) {
           return Left(result);
         }
@@ -45,7 +44,7 @@ class NewsRepo implements INewsRepo {
         }
       }
     } else {
-      final result = await newsLocalDataSource.getNews(boxName: "bitcoin");
+      final result = await newsLocalDataSource.getAllNews();
       if (result == null) {
         return const Right(Failure(message: "No internet connection"));
       } else {
@@ -55,5 +54,37 @@ class NewsRepo implements INewsRepo {
   }
 
   @override
-  getHeadlineNews() {}
+  Future<Either<List<HeadLineEntity>, Failure>> getHeadlineNews(
+      newsCount) async {
+    bool isConnected = await internetConnection.isConnected();
+    //USE THE ISCONNECTED TO DECIDE WHETHER TO RETURN FROM DATASOURCE OR NOT
+    if (isConnected) {
+      debugPrint(isConnected.toString());
+      try {
+        final result = await newsRemoteDataSource.getHeadlineNews(newsCount);
+        await newsLocalDataSource.storeHeadlineNews(
+          newsList: result,
+        );
+        return Left(result);
+      } on DioError catch (e) {
+        final result = await newsLocalDataSource.getHeadlineNews();
+        if (result != null) {
+          return Left(result);
+        }
+        if (e.type == DioErrorType.connectTimeout) {
+          debugPrint("From remote source");
+          return const Right(Failure(message: "Please check your connection"));
+        } else {
+          return const Right(Failure(message: "server Error"));
+        }
+      }
+    } else {
+      final result = await newsLocalDataSource.getHeadlineNews();
+      if (result == null) {
+        return const Right(Failure(message: "No internet connection"));
+      } else {
+        return Left(result);
+      }
+    }
+  }
 }

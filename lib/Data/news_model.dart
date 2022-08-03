@@ -59,15 +59,16 @@ class HeadlineNewsModel {
   });
 
   HeadlineNewsModel.fromJson(Map<String, dynamic> json)
-      : title = json["title"],
-        description = json["description"],
-        urlToImage = json["urlToImage"],
-        content = json["content"];
+      : title = json["title"] ?? "",
+        description = json["description"] ?? "",
+        urlToImage = json["urlToImage"] ?? "",
+        content = json["content"] ?? "";
 
-  List<HeadlineNewsModel> fromList(List json) {
-    List<HeadlineNewsModel> headlineNewsList =
-        json.map((item) => HeadlineNewsModel.fromJson(item)).toList();
-    return headlineNewsList;
+  static List<HeadLineEntity> fromList(dynamic json) {
+    List articles = json["articles"] as List;
+    List<HeadLineEntity> newsList = List.from(articles.map(
+        (newsItem) => HeadlineNewsModel.fromJson(newsItem).toHeadlineEntity()));
+    return newsList;
   }
 }
 

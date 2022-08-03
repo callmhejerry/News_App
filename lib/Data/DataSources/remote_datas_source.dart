@@ -12,7 +12,7 @@ class RemoteDataSouce {
     return remoteAllNews.getAllNews(pageSize);
   }
 
-  getHeadlineNews(int page) {
+  Future<List<HeadLineEntity>> getHeadlineNews(int page) {
     return remoteHeadlineNews.getHeadlineNews(page);
   }
 }
@@ -23,11 +23,6 @@ abstract class IRemoteHeadlineNews {
 
 abstract class IRemoteAllNews {
   Future<List<NewsEntity>> getAllNews(int page);
-}
-
-class AllBitCoinHeadlines implements IRemoteHeadlineNews {
-  @override
-  getHeadlineNews(int page) {}
 }
 
 class ApiClient {

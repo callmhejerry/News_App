@@ -11,16 +11,24 @@ enum NewsStatus {
 
 class NewsState {
   final List<NewsEntity>? news;
+  final List<HeadLineEntity>? headline;
   final NewsStatus status;
   final Failure? failure;
 
-  const NewsState({this.news, this.status = NewsStatus.initial, this.failure});
+  const NewsState(
+      {this.news,
+      this.status = NewsStatus.initial,
+      this.failure,
+      this.headline});
 
   static NewsState copyWith(
-      {List<NewsEntity>? news, required NewsStatus status}) {
+      {List<NewsEntity>? news,
+      required NewsStatus status,
+      List<HeadLineEntity>? headline}) {
     return NewsState(
       news: news ?? news,
       status: status,
+      headline: headline ?? headline,
     );
   }
 }
