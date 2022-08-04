@@ -20,7 +20,8 @@ class News {
       author: json["author"] ?? "",
       content: json["content"] ?? "",
       description: json["description"] ?? "",
-      imageUrl: json["urlToImage"] ?? "",
+      imageUrl: json["urlToImage"] ??
+          "https://demofree.sirv.com/nope-not-here.jpg?w=150",
       title: json["title"] ?? "",
     );
   }
@@ -61,7 +62,8 @@ class HeadlineNewsModel {
   HeadlineNewsModel.fromJson(Map<String, dynamic> json)
       : title = json["title"] ?? "",
         description = json["description"] ?? "",
-        urlToImage = json["urlToImage"] ?? "",
+        urlToImage = json["urlToImage"] ??
+            "https://demofree.sirv.com/nope-not-here.jpg?w=150",
         content = json["content"] ?? "";
 
   static List<HeadLineEntity> fromList(dynamic json) {

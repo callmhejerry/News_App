@@ -12,11 +12,20 @@ import 'package:news_app/logic/internet_bloc/internet_bloc.dart';
 import 'package:news_app/utils/internet_checker.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'Data/DataSources/LocalDatasource/local_business.dart';
+import 'Data/DataSources/LocalDatasource/local_entertainment.dart';
 import 'Data/DataSources/LocalDatasource/local_politics.dart';
+import 'Data/DataSources/LocalDatasource/local_sport.dart';
 import 'Data/DataSources/RemoteDataSource/AllNews/bitcoin_news.dart';
+import 'Data/DataSources/RemoteDataSource/AllNews/business_news.dart';
+import 'Data/DataSources/RemoteDataSource/AllNews/entertainment_news.dart';
+import 'Data/DataSources/RemoteDataSource/AllNews/sport_news.dart';
 import 'Data/DataSources/RemoteDataSource/HeaddlineNews/bitcoin_headline.dart';
+import 'Data/DataSources/RemoteDataSource/HeaddlineNews/business.dart';
+import 'Data/DataSources/RemoteDataSource/HeaddlineNews/entertainment.dart';
 import 'Data/DataSources/RemoteDataSource/HeaddlineNews/politics_headline.dart';
 
+import 'Data/DataSources/RemoteDataSource/HeaddlineNews/sport.dart';
 import 'Presentation/HomePage/Screens/bitcoin_screen.dart';
 import 'Presentation/HomePage/Screens/business_screen.dart';
 import 'Presentation/HomePage/Screens/entertainment_screen.dart';
@@ -84,10 +93,10 @@ class MyApp extends StatelessWidget {
             return NewsBloc<BusinessFeeds>(
               newsRepo: NewsRepo(
                 newsRemoteDataSource: RemoteDataSouce(
-                  remoteAllNews: AllPoliticsNews(),
-                  remoteHeadlineNews: AllPoliticsHeadlines(),
+                  remoteAllNews: AllBusinessNews(),
+                  remoteHeadlineNews: AllBusinessHeadlines(),
                 ),
-                newsLocalDataSource: PoliticsLocalDataSource(),
+                newsLocalDataSource: BusinessLocalDataSource(),
                 internetConnection: InternetConnection(),
               ),
             )..add(LoadNewsEvent());
@@ -98,10 +107,10 @@ class MyApp extends StatelessWidget {
             return NewsBloc<SportFeeds>(
               newsRepo: NewsRepo(
                 newsRemoteDataSource: RemoteDataSouce(
-                  remoteAllNews: AllPoliticsNews(),
-                  remoteHeadlineNews: AllPoliticsHeadlines(),
+                  remoteAllNews: AllSportNews(),
+                  remoteHeadlineNews: AllSportHeadlines(),
                 ),
-                newsLocalDataSource: PoliticsLocalDataSource(),
+                newsLocalDataSource: SportLocalDataSource(),
                 internetConnection: InternetConnection(),
               ),
             )..add(LoadNewsEvent());
@@ -112,10 +121,10 @@ class MyApp extends StatelessWidget {
             return NewsBloc<EntertainmentFeeds>(
               newsRepo: NewsRepo(
                 newsRemoteDataSource: RemoteDataSouce(
-                  remoteAllNews: AllPoliticsNews(),
-                  remoteHeadlineNews: AllPoliticsHeadlines(),
+                  remoteAllNews: AllEntertainmentNews(),
+                  remoteHeadlineNews: AllEntertainmentHeadlines(),
                 ),
-                newsLocalDataSource: PoliticsLocalDataSource(),
+                newsLocalDataSource: EntertainmentLocalDataSource(),
                 internetConnection: InternetConnection(),
               ),
             )..add(LoadNewsEvent());
@@ -129,10 +138,14 @@ class MyApp extends StatelessWidget {
       ],
       child: ScreenUtilInit(
         builder: (context, child) {
-          return const MaterialApp(
+          return MaterialApp(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
-            home: NewsFeeds(),
+            theme: ThemeData(
+              fontFamily: "Rubik",
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: const NewsFeeds(),
           );
         },
         designSize: const Size(375, 812),

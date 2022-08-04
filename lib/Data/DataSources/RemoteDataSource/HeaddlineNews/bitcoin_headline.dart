@@ -12,7 +12,7 @@ class AllBitCoinHeadlines extends ApiClient implements IRemoteHeadlineNews {
     Response res = await dio.get(
       "/top-headlines",
       queryParameters: {
-        "category": "bitcoin",
+        "category": "business",
         "country": "ng",
         "pageSize": 7,
         "page": page,

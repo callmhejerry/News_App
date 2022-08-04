@@ -28,31 +28,35 @@ class TreandingCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(13.r),
             child: CachedNetworkImage(
-              imageUrl: image,
-              cacheKey: "trending",
-              imageBuilder: (context, imageProvider) {
-                return Image(
-                  image: imageProvider,
-                  height: 100.r,
-                  fit: BoxFit.cover,
-                  width: 100.r,
-                  filterQuality: FilterQuality.high,
-                );
-              },
-              errorWidget: (context, url, error) {
-                return const SizedBox.expand(
-                  child: Center(
-                    child: Icon(
-                      Icons.broken_image_outlined,
-                      color: Colors.black,
-                    ),
-                  ),
-                );
-              },
-              fadeInCurve: Curves.easeIn,
-              fadeInDuration: const Duration(milliseconds: 500),
-              alignment: Alignment.center,
-            ),
+                imageUrl: image,
+                // cacheKey: image,
+                imageBuilder: (context, imageProvider) {
+                  return Image(
+                    image: imageProvider,
+                    height: 100.r,
+                    fit: BoxFit.cover,
+                    width: 100.r,
+                    filterQuality: FilterQuality.high,
+                  );
+                },
+                errorWidget: (context, url, error) {
+                  return Image.asset(
+                    "assets/Mask.png",
+                    height: 100.r,
+                    fit: BoxFit.cover,
+                    width: 100.r,
+                  );
+                },
+                fadeInCurve: Curves.easeIn,
+                fadeInDuration: const Duration(milliseconds: 500),
+                alignment: Alignment.center,
+                placeholder: (context, url) {
+                  return Container(
+                    color: const Color.fromARGB(255, 221, 221, 221),
+                    height: 100.r,
+                    width: 100.r,
+                  );
+                }),
           ),
           SizedBox(
             width: 8.w,

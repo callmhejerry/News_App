@@ -35,6 +35,7 @@ class NewsFeedList extends StatelessWidget {
             height: 366.h,
             child: ListView.builder(
               padding: EdgeInsets.only(left: 16.w),
+              // addAutomaticKeepAlives: false,
               scrollDirection: Axis.horizontal,
               itemCount: headlineList.length,
               itemBuilder: (context, index) {

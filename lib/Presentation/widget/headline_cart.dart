@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HeadlineCard extends StatelessWidget {
   final String image;
@@ -27,23 +27,28 @@ class HeadlineCard extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: CachedNetworkImage(
+                  placeholder: (context, url) {
+                    return Container(
+                      color: const Color.fromARGB(255, 221, 221, 221),
+                      height: double.maxFinite,
+                      width: double.maxFinite,
+                    );
+                  },
                   imageUrl: image,
-                  cacheKey: "headline",
+                  // cacheKey: image,
                   imageBuilder: (context, imageProvider) {
                     return Image(
                       image: imageProvider,
+                      height: 100.r,
                       fit: BoxFit.cover,
+                      width: 100.r,
                       filterQuality: FilterQuality.high,
                     );
                   },
                   errorWidget: (context, url, error) {
-                    return const SizedBox.expand(
-                      child: Center(
-                        child: Icon(
-                          Icons.broken_image_outlined,
-                          color: Colors.black,
-                        ),
-                      ),
+                    return Image.asset(
+                      "assets/Mask.png",
+                      fit: BoxFit.cover,
                     );
                   },
                   fadeInCurve: Curves.easeIn,
@@ -63,10 +68,11 @@ class HeadlineCard extends StatelessWidget {
                       sigmaY: 2,
                     ),
                     child: Container(
+                      height: 163.h,
                       padding: EdgeInsets.only(
                           bottom: 24.h, left: 16.w, right: 16.w, top: 10.h),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withOpacity(0.6),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
