@@ -15,10 +15,7 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
       emit(InternetState(status: InternetStatus.disconnected));
     });
     internetSubscription = internetConnection.connection.listen((event) {
-      if ((event != ConnectivityResult.mobile) ||
-          (event != ConnectivityResult.wifi) ||
-          (event != ConnectivityResult.ethernet) &&
-              (event == ConnectivityResult.none)) {
+      if (event == ConnectivityResult.none) {
         add(NotConnected());
       }
     });
