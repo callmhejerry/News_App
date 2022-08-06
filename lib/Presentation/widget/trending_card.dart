@@ -9,12 +9,14 @@ class TreandingCard extends StatelessWidget {
   final String description;
   final String title;
   final String content;
+  final int index;
   const TreandingCard({
     Key? key,
     required this.description,
     required this.image,
     required this.title,
     required this.content,
+    required this.index,
   }) : super(key: key);
 
   void toDetailsScreens(BuildContext context) {
@@ -25,6 +27,7 @@ class TreandingCard extends StatelessWidget {
           image: image,
           title: title,
           content: content,
+          index: index,
         ),
       ),
     );
@@ -49,37 +52,38 @@ class TreandingCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(13.r),
               child: Hero(
-                tag: "Hero image",
+                tag: index,
                 child: CachedNetworkImage(
-                    imageUrl: image,
-                    // cacheKey: image,
-                    imageBuilder: (context, imageProvider) {
-                      return Image(
-                        image: imageProvider,
-                        height: 100.r,
-                        fit: BoxFit.cover,
-                        width: 100.r,
-                        filterQuality: FilterQuality.high,
-                      );
-                    },
-                    errorWidget: (context, url, error) {
-                      return Image.asset(
-                        "assets/Mask.png",
-                        height: 100.r,
-                        fit: BoxFit.cover,
-                        width: 100.r,
-                      );
-                    },
-                    fadeInCurve: Curves.easeIn,
-                    fadeInDuration: const Duration(milliseconds: 500),
-                    alignment: Alignment.center,
-                    placeholder: (context, url) {
-                      return Container(
-                        color: const Color.fromARGB(255, 221, 221, 221),
-                        height: 100.r,
-                        width: 100.r,
-                      );
-                    }),
+                  imageUrl: image,
+                  // cacheKey: image,
+                  imageBuilder: (context, imageProvider) {
+                    return Image(
+                      image: imageProvider,
+                      height: 100.r,
+                      fit: BoxFit.cover,
+                      width: 100.r,
+                      filterQuality: FilterQuality.high,
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return Image.asset(
+                      "assets/Mask.png",
+                      height: 100.r,
+                      fit: BoxFit.cover,
+                      width: 100.r,
+                    );
+                  },
+                  fadeInCurve: Curves.easeIn,
+                  fadeInDuration: const Duration(milliseconds: 500),
+                  alignment: Alignment.center,
+                  placeholder: (context, url) {
+                    return Container(
+                      color: const Color.fromARGB(255, 221, 221, 221),
+                      height: 100.r,
+                      width: 100.r,
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(
@@ -114,7 +118,7 @@ class TreandingCard extends StatelessWidget {
                       height: 1.33,
                       letterSpacing: -0.24.w,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

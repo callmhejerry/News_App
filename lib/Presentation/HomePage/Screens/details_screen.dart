@@ -4,22 +4,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailsScreen extends StatelessWidget {
   final String content, title, image, description;
+  final int index;
   const DetailsScreen({
     Key? key,
     required this.content,
     required this.title,
     required this.image,
     required this.description,
+    required this.index,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Hero(
-              tag: "Hero image",
+              tag: index,
               child: CachedNetworkImage(
                 imageUrl: image,
                 // cacheKey: image,

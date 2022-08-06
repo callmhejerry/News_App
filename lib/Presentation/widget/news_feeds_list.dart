@@ -69,6 +69,7 @@ class NewsFeedList extends StatelessWidget {
                   image: allNewsList[index].imageUrl,
                   title: allNewsList[index].title,
                   content: allNewsList[index].content,
+                  index: index,
                 );
               },
               childCount: allNewsList.length,

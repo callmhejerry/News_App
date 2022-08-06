@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
@@ -37,6 +40,10 @@ import 'logic/news_bloc.dart/news_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ByteData data =
+      await PlatformAssetBundle().load('assets/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext
+      .setTrustedCertificatesBytes(data.buffer.asUint8List());
   final document = await getApplicationDocumentsDirectory();
   Hive.init(document.path);
   Hive.registerAdapter(NewsEntityAdapter());
